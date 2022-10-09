@@ -1,4 +1,4 @@
-import java.util.Arrays;
+
 
 public class StepTracker {
 
@@ -11,20 +11,12 @@ public class StepTracker {
             monthToData[i] = new MonthData();
         }
     }
-
     public void saveStepsInDay(int month, int day, int steps) {
-        for (int i = 0; i < monthToData.length; i++) {
-            if (i == month) {
-                for (int j = 0; j < monthToData[i].dayData.length; j++) {
-                    if (j == day) {
-                        monthToData[i].dayData[j] = steps;
-                    } else {
-                        return;
-                    }
-                }
-            } else {
-                return;
-            }
+        if (steps < 0) {
+            System.out.println("Количество шагов не может быть отрицательным.") ;
+        } else {
+            monthToData[month].dayData[day - 1] = steps;
+            System.out.println("Ваши данные успешно сохранены");
         }
     }
 
@@ -83,13 +75,19 @@ public class StepTracker {
     }
 
     public int getBestSeries(int month) {
+        int maxSeries = 0;
         int series = 0;
         for (int i = 0; i < monthToData[month].dayData.length; i++) {
-            if (monthToData[month].dayData[i] > goal) {
+            if (monthToData[month].dayData[i] >= goal) {
+                series = series + 1;
+                if (series > maxSeries) {
+                    maxSeries = series;
+                }
+            } else {
+                series = 0;
             }
-            series = series + 1;
         }
-        return series;
+        return maxSeries;
     }
 }
 
@@ -97,9 +95,6 @@ public class StepTracker {
     class MonthData {
         int[] dayData = new int[30];
 
-        public void fillInDays() {
-            Arrays.fill(dayData, 0);
-        }
     }
 
 
